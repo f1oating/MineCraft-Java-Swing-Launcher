@@ -1,37 +1,19 @@
+package back;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class VersionListComboBox {
+public class DataVersions {
 	
-	private JComboBox<String> versionList;
-	private String pcName = System.getProperty("user.name");
 	private String[] versions = {"1.5.2", "1.5.1", "1.4.7", "1.4.6", "1.4.5", "1.4.4", "1.4.2", 
-								 "1.3.2", "1.3.1", "1.2.5", "1.2.4", "1.2.3", "1.2.2", "1.2.1",
-								 "1.1", "1.0"};
+			 "1.3.2", "1.3.1", "1.2.5", "1.2.4", "1.2.3", "1.2.2", "1.2.1",
+			 "1.1", "1.0"};
 	private Properties properties;
+	private String pcName = System.getProperty("user.name");
 	
-	public JComboBox<String> createVersionListComboBox() {
-		versionList = new JComboBox<String>(versions);
-        versionList.setSelectedIndex(getSelectedIndex());
-        versionList.setMaximumRowCount(5);
-        versionList.setBounds(new Rectangle(190, 500, 150, 30));
-        versionList.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		setSelectedText(versionList.getSelectedItem());
-        	}
-        });
-        
-        return versionList;
-	}
-	
-	private int getSelectedIndex() {
+	public int getSelectedIndex() {
 		properties = new Properties();
 		String dbVersion = "1.5.2";
 		int index = 0;
@@ -48,7 +30,7 @@ public class VersionListComboBox {
 		return index;
 	}
 	
-	private void setSelectedText(Object text) {
+	public void setSelectedText(Object text) {
 		properties = new Properties();
 		String dbVersion = text.toString();
 		try {
@@ -67,6 +49,25 @@ public class VersionListComboBox {
 		}
 	}
 	
+	public String getVersion() {
+		properties = new Properties();
+		String version = "1.5.2";
+		try {
+			FileInputStream stream = 
+					new FileInputStream(String.format("C:\\Users\\%s\\.f1oatingMineCraft\\launcher\\config.properties", pcName));
+			properties.load(stream);
+			version = properties.getProperty("database.version");
+			stream.close();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return version;
+	}
+	
+	public String[] getVersions() {
+		return this.versions;
+	}
+	
 	private int findIndex(String[] versions, String dbVersion) {
 		for(int i = 0; i < versions.length; i++) {
 			if(versions[i].equals(dbVersion)) {
@@ -75,6 +76,5 @@ public class VersionListComboBox {
 		}
 		return 0;
 	}
+	
 }
-
-
