@@ -1,19 +1,19 @@
 package back;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Launch {
 	
 	private String pcName = System.getProperty("user.name");
+
 	
-	public void launchMineCraft(String userName, String version) {
+	public void launchMineCraft(String userName, String version) throws Exception{
 			
 			List<String> command = new ArrayList<>();
 			
-			String gameDir = String.format("--gameDir C:\\Users\\%s\\.f1oatingMineCraft\\instances\\%s", pcName ,version);
-			String assetsDir = String.format("--assetsDir C:\\Users\\%s\\.f1oatingMineCraft\\assets", pcName);
+			String gameDir = String.format("C:\\Users\\%s\\.f1oatingMineCraft\\instances\\%s", pcName ,version);
+			String assetsDir = String.format("C:\\Users\\%s\\.f1oatingMineCraft\\assets", pcName);
 			
 			String cp = 
 					String.format("C:\\Users\\%s\\.f1oatingMineCraft\\libraries\\net\\minecraft\\launchwrapper\\1.11\\launchwrapper-1.11.jar;", pcName) +
@@ -30,7 +30,7 @@ public class Launch {
 			
 			
 			command.add(String.format("C:\\Users\\%s\\.f1oatingMineCraft\\jre\\jdk8u382-b05-jre\\bin\\java.exe", pcName));
-			command.add(String.format("-Djava.library.path=C:\\Users\\%s\\.f1oatingMineCraft\\versions\\natives ", pcName));
+			command.add(String.format("-Djava.library.path=C:\\Users\\%s\\.f1oatingMineCraft\\versions\\natives", pcName));
 			command.add("-Xmx4G");
 			command.add("-Xms2G");
 			command.add("-Dminecraft.launcher.brand=f1oatingMineCraft");
@@ -38,28 +38,16 @@ public class Launch {
 			command.add("-cp");
 			command.add(cp);
 			command.add("net.minecraft.launchwrapper.Launch");
+			command.add(userName);
+			command.add("--gameDir");
 			command.add(gameDir);
+			command.add("--assetsDir");
 			command.add(assetsDir);
-			command.add(userName);		
 			
-			Thread thread = new Thread(new Runnable() {
-				public void run() {
-					try {
-						
-						Process process = Runtime.getRuntime().exec(String.join(" ", command));
-						
-						System.exit(0);
-			            
-			            @SuppressWarnings("unused")
-						int exitCode = process.waitFor();
-			            
-					}catch(IOException | InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-			
-			thread.start();
-			
+			ProcessBuilder processBuilder = new ProcessBuilder(command);
+			processBuilder.inheritIO();
+			Process process = processBuilder.start();
+			process.waitFor();
+
 		}
 }

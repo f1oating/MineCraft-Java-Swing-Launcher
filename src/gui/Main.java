@@ -33,7 +33,7 @@ public class Main{
 
         frame.add(new UserNameField().createUserNameField());
         frame.add(new VersionListComboBox().createVersionListComboBox());
-        frame.add(new PlayButtonJButton().createPlayButton());
+        frame.add(new PlayButtonJButton(frame).createPlayButton());
         frame.add(new BackGround(frame).createBackGround());
         frame.setVisible(true);
     }

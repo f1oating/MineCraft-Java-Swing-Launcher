@@ -15,6 +15,11 @@ public class PlayButtonJButton{
 	private DataUserName dataUserName;
 	private DataVersions dataVersions;
 	private Launch launch;
+	private JFrame frame;
+	
+	PlayButtonJButton(JFrame frame){
+		this.frame = frame;
+	}
 	
 	public JButton createPlayButton() {
 		playButton = new JButton();
@@ -24,8 +29,25 @@ public class PlayButtonJButton{
         playButton.setText("Play");
         playButton.setBounds(380, 480, 200, 70);
         playButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		launch.launchMineCraft(dataUserName.getUserName(), dataVersions.getVersion());
+        	public void actionPerformed(ActionEvent e) {     
+        		
+        		SwingWorker<Void, Void> minecraftExecute = new SwingWorker<Void, Void>(){
+        			@Override
+        			protected Void doInBackground() throws Exception {
+        				frame.setVisible(false);
+        				
+        				launch.launchMineCraft(dataUserName.getUserName(), dataVersions.getVersion());
+        				
+        				return null;
+        			}
+        			
+        			@Override
+        			protected void done() {
+        				frame.setVisible(true);
+        			}
+        		};
+        		
+        		minecraftExecute.execute();
         	}
         });
         
